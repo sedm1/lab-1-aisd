@@ -1,27 +1,19 @@
-results_of_the_polls = [set() for _ in range(8)]   #генерируем множества, в которые будем добавлять студентов,
-    # ответивших положительно на тот или иной вопрос
-person = set() #множество всех возможных студентов
-for student in open('students.txt', encoding='utf-8'): #идём по всем строкам файла, содержащего имя студента и его ответы в формате да\нет
+results_of_the_polls = [set() for _ in range(8)]
+person = set()
+for student in open('students.txt', encoding='utf-8'):
     student = student.split()
-    person.add(' '.join(student[:2]))  #добавляем студента в множество всех возможных студентов
-    for i in range(8):  #перебираем вопросы по номеру (0-7)
-        if student[i + 2] == 'да':  #если студент ответил на вопрос под номером i положительно,
-            # то добавляем его в множество под номером i из массива results_of_the_polls, содержащее всех студентов,
-            # давших ответ "да" на вопрос i
+    person.add(' '.join(student[:2]))
+    for i in range(8):
+        if student[i + 2] == 'да':
             results_of_the_polls[i].add(' '.join(student[:2]))
-questions_list = open('questions.txt', encoding='utf-8').readlines() #в массив считываем все вопросы из файла с вопросами
-for question_number in range(8):  #идём по номерам вопросов (0-7)
-    answer = input(questions_list[question_number])    #выводим вопрос на экран и считываем ответ
-    if answer.lower() == 'да':  #сужаем круг потенциальных студентов,
-            # пересекаем множество возможных студентов со множеством студентов, ответивших на вопрос положительно
-            # (искомый студент входит в оба множества одновременно)
+questions_list = open('questions.txt', encoding='utf-8').readlines()
+for question_number in range(8):
+    answer = input(questions_list[question_number])
+    if answer.lower() == 'да':
         person = person & results_of_the_polls[question_number]
     else:
-        person = person - results_of_the_polls[question_number] #если студент ответил отрицательно,
-            # то вычитаем из множества возможных студентов множество студентов, ответивших на вопрос положительно
-            # (искомый студнт входит в первое множество и не входит во второе)
-    
-    if len(person) == 1:  #если остался лишь один возможный студент, то он - искомый, выводим ответ
+        person = person - results_of_the_polls[question_number]
+    if len(person) == 1:
         print('Вы загадали ', *person, '.', sep='')
         break
     if len(person) == 0:
